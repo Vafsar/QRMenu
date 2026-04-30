@@ -1,0 +1,87 @@
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.table-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.table-card:hover { box-shadow: var(--shadow-md); }
+.table-card.inactive { opacity: 0.6; }
+
+.table-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.table-number {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.table-desc {
+  font-size: 13px;
+  color: var(--sage);
+  margin-top: 2px;
+}
+
+.qr-wrap {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid var(--border);
+}
+
+.qr-img {
+  width: 100%;
+  display: block;
+}
+
+.qr-placeholder {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sage);
+  font-size: 13px;
+}
+
+.qr-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28,25,23,0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.qr-wrap:hover .qr-overlay { opacity: 1; }
+
+.table-link a {
+  font-size: 12px;
+  color: var(--amber);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.table-link a:hover { text-decoration: underline; }
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

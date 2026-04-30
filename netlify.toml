@@ -1,0 +1,13 @@
+[build]
+  base    = "QRMenu.Frontend"
+  command = "npm run build"
+  publish = "QRMenu.Frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# React Router için tüm route'ları index.html'e yönlendir
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

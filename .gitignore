@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+*.user
+*.db
+*.db-shm
+*.db-wal
+wwwroot/uploads/
+wwwroot/qrcodes/
+
+# Node
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.DS_Store
