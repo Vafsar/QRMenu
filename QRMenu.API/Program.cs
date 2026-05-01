@@ -15,18 +15,33 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Bağlantı: önce DATABASE_URL (Railway), sonra appsettings
-var connectionString =
+var rawConnection =
     Environment.GetEnvironmentVariable("DATABASE_URL")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Veritabanı bağlantısı bulunamadı!");
 
+string connectionString;
+
 // Railway DATABASE_URL postgres:// formatında gelir, Npgsql için dönüştür
-if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
+if (rawConnection.StartsWith("postgres://") || rawConnection.StartsWith("postgresql://"))
 {
-    var uri = new Uri(connectionString);
+    var uri = new Uri(rawConnection);
     var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    var host = uri.Host;
+    var port2 = uri.Port;
+    var db = uri.AbsolutePath.TrimStart('/');
+    var user = userInfo[0];
+    var pass = userInfo[1];
+    
+    // Railway proxy için SSL disable et
+    connectionString = $"Host={host};Port={port2};Database={db};Username={user};Password={pass};SSL Mode=Disable;";
 }
+else
+{
+    connectionString = rawConnection;
+}
+
+Console.WriteLine($"Connecting to: {connectionString.Split(';')[0]}");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
@@ -51,12 +66,14 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
+        Console.WriteLine("Migration başlatılıyor...");
         db.Database.Migrate();
         Console.WriteLine("✅ Veritabanı migration tamamlandı.");
     }
     catch (Exception ex)
     {
         Console.WriteLine($"❌ Migration hatası: {ex.Message}");
+        Console.WriteLine($"❌ Stack: {ex.StackTrace}");
         throw;
     }
 }
