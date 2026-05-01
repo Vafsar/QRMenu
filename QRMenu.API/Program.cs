@@ -31,21 +31,13 @@ if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("p
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// CORS: FRONTEND_URL env var ile Netlify URL'ini al
-var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL")
-    ?? builder.Configuration["AppSettings:FrontendUrl"]
-    ?? "http://localhost:3000";
-
+// CORS: tüm originlere izin ver
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins(
-                frontendUrl,
-                "http://localhost:3000",
-                "http://localhost:5173"
-            )
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
