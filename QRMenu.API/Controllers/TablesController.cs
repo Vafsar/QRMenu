@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRMenu.API.Data;
@@ -8,6 +9,7 @@ namespace QRMenu.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TablesController : ControllerBase
 {
     private readonly AppDbContext _db;

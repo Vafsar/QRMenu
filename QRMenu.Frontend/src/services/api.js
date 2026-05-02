@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getToken, clearAuth } from './authService';
 
 // Production'da VITE_API_URL env var'ı kullan, local'de proxy çalışır
 const BASE_URL = import.meta.env.VITE_API_URL
@@ -6,6 +7,25 @@ const BASE_URL = import.meta.env.VITE_API_URL
   : '/api';
 
 const api = axios.create({ baseURL: BASE_URL });
+
+// Her istekte JWT token ekle
+api.interceptors.request.use(config => {
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// 401 gelirse oturumu temizle ve login'e yönlendir
+api.interceptors.response.use(
+  res => res,
+  err => {
+    if (err.response?.status === 401 && !window.location.pathname.includes('/admin/login')) {
+      clearAuth();
+      window.location.href = '/admin/login';
+    }
+    return Promise.reject(err);
+  }
+);
 
 // Categories
 export const getCategories = () => api.get('/categories').then(r => r.data);
@@ -40,3 +60,6 @@ export const deleteOrder = (id) => api.delete(`/orders/${id}`);
 // Customer Menu
 export const getMenu = (tableId) => api.get(`/menu/${tableId}`).then(r => r.data);
 export const createOrder = (data) => api.post('/orders', data).then(r => r.data);
+
+// Auth
+export const loginAdmin = (data) => api.post('/auth/login', data).then(r => r.data);

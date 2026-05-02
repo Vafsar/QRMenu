@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRMenu.API.Data;
@@ -7,6 +8,7 @@ namespace QRMenu.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _db;
@@ -39,6 +41,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(CreateOrderDto dto)
     {
         var table = await _db.Tables.FindAsync(dto.TableId);
