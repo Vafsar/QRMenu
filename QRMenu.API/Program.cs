@@ -100,17 +100,27 @@ using (var scope = app.Services.CreateScope())
         db.Database.EnsureCreated();
         Console.WriteLine("✅ Veritabanı hazır.");
 
-        // Hiç admin yoksa varsayılan admin oluştur
+        // Hiç admin yoksa varsayılan kullanıcıları oluştur
         if (!db.AdminUsers.Any())
         {
-            db.AdminUsers.Add(new AdminUser
-            {
-                Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123!admin!321"),
-                CreatedAt = DateTime.UtcNow
-            });
+            db.AdminUsers.AddRange(
+                new AdminUser
+                {
+                    Username = "admin",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("123!admin!321"),
+                    Role = "Admin",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new AdminUser
+                {
+                    Username = "garson",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("123!garson!321"),
+                    Role = "Waiter",
+                    CreatedAt = DateTime.UtcNow
+                }
+            );
             db.SaveChanges();
-            Console.WriteLine("✅ Varsayılan admin oluşturuldu. (admin / admin123)");
+            Console.WriteLine("✅ Varsayılan kullanıcılar oluşturuldu. (admin / 123!admin!321) (garson / garson123)");
         }
     }
     catch (Exception ex)

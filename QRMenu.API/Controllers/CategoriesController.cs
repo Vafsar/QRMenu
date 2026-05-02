@@ -8,13 +8,13 @@ namespace QRMenu.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class CategoriesController : ControllerBase
 {
     private readonly AppDbContext _db;
     public CategoriesController(AppDbContext db) => _db = db;
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         var cats = await _db.Categories.OrderBy(c => c.SortOrder).ToListAsync();
@@ -22,6 +22,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> Get(int id)
     {
         var c = await _db.Categories.FindAsync(id);
@@ -30,6 +31,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(CreateCategoryDto dto)
     {
         var cat = new Category { Name = dto.Name, Description = dto.Description, SortOrder = dto.SortOrder };
@@ -39,6 +41,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, UpdateCategoryDto dto)
     {
         var cat = await _db.Categories.FindAsync(id);
@@ -52,6 +55,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var cat = await _db.Categories.FindAsync(id);

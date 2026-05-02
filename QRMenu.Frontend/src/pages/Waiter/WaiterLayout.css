@@ -1,0 +1,11 @@
+.waiter-sidebar {
+  background: #1a2744;
+}
+
+.waiter-sidebar .nav-item.active {
+  background: #3B82F6;
+}
+
+.waiter-sidebar .logo-icon {
+  color: #60A5FA;
+}

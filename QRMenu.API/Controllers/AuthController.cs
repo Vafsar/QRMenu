@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Kullanıcı adı veya şifre hatalı." });
 
         var token = GenerateJwtToken(user);
-        return Ok(new LoginResponseDto(token, user.Username));
+        return Ok(new LoginResponseDto(token, user.Username, user.Role));
     }
 
     private string GenerateJwtToken(AdminUser user)
@@ -44,6 +44,7 @@ public class AuthController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role),
         };
 
         var expiry = int.Parse(_config["Jwt:ExpiryHours"] ?? "24");

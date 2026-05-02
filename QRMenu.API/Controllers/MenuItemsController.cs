@@ -8,7 +8,6 @@ namespace QRMenu.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class MenuItemsController : ControllerBase
 {
     private readonly AppDbContext _db;
@@ -21,6 +20,7 @@ public class MenuItemsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] int? categoryId)
     {
         var query = _db.MenuItems.Include(m => m.Category).AsQueryable();
@@ -32,6 +32,7 @@ public class MenuItemsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> Get(int id)
     {
         var item = await _db.MenuItems.Include(m => m.Category).FirstOrDefaultAsync(m => m.Id == id);
@@ -40,6 +41,7 @@ public class MenuItemsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromForm] CreateMenuItemDto dto, IFormFile? image)
     {
         var item = new MenuItem
@@ -61,6 +63,7 @@ public class MenuItemsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, [FromForm] UpdateMenuItemDto dto, IFormFile? image)
     {
         var item = await _db.MenuItems.Include(m => m.Category).FirstOrDefaultAsync(m => m.Id == id);
@@ -87,6 +90,7 @@ public class MenuItemsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await _db.MenuItems.FindAsync(id);

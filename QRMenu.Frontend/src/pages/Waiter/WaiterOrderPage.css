@@ -1,0 +1,269 @@
+.waiter-page {
+  padding-bottom: 20px;
+}
+
+/* ── Bölüm başlığı ── */
+.waiter-section {
+  margin-bottom: 20px;
+}
+
+.waiter-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sage);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+/* ── Masa seçimi ── */
+.table-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 18px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--charcoal);
+  transition: all 0.15s;
+  min-width: 90px;
+}
+
+.table-chip:hover {
+  border-color: #3B82F6;
+  color: #3B82F6;
+}
+
+.table-chip.selected {
+  border-color: #3B82F6;
+  background: #3B82F6;
+  color: #fff;
+}
+
+.chip-sub {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+/* ── Kategori sekmeleri ── */
+.category-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cat-tab {
+  padding: 7px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  background: #fff;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sage);
+  transition: all 0.15s;
+}
+
+.cat-tab:hover {
+  border-color: var(--amber);
+  color: var(--charcoal);
+}
+
+.cat-tab.active {
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+  color: #fff;
+}
+
+/* ── Ürün listesi ── */
+.waiter-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.waiter-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.waiter-item.in-cart {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.waiter-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.waiter-item-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+.waiter-item-desc {
+  font-size: 12px;
+  color: var(--sage);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.waiter-item-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-top: 4px;
+}
+
+/* ── Miktar kontrolü ── */
+.waiter-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-family: var(--font-body);
+}
+
+.qty-btn:hover:not(:disabled) {
+  border-color: var(--charcoal);
+  background: var(--charcoal);
+  color: #fff;
+}
+
+.qty-btn.plus:hover:not(:disabled) {
+  border-color: #3B82F6;
+  background: #3B82F6;
+  color: #fff;
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-val {
+  width: 28px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--charcoal);
+}
+
+/* ── Sabit alt sepet barı ── */
+.waiter-cart-bar {
+  position: fixed;
+  bottom: 0;
+  left: 240px;
+  right: 0;
+  background: var(--charcoal);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 200;
+  box-shadow: 0 -4px 24px rgba(28,25,23,0.2);
+}
+
+.cart-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.cart-badge {
+  background: #3B82F6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-bar-label {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+.cart-bar-table {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+}
+
+.cart-bar-total {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.cart-bar-btn {
+  background: #3B82F6;
+  white-space: nowrap;
+  padding: 10px 20px;
+}
+
+.cart-bar-btn:hover:not(:disabled) {
+  background: #2563EB;
+  transform: none;
+}
+
+/* ── Mobil ── */
+@media (max-width: 768px) {
+  .waiter-cart-bar {
+    left: 0;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+
+  .cart-bar-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

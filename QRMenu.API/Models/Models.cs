@@ -97,8 +97,9 @@ public class AdminUser
     public int Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
+    public string Role { get; set; } = "Admin"; // "Admin" veya "Waiter"
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public record LoginDto(string Username, string Password);
-public record LoginResponseDto(string Token, string Username);
+public record LoginResponseDto(string Token, string Username, string Role);

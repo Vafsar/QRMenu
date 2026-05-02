@@ -9,7 +9,6 @@ namespace QRMenu.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class TablesController : ControllerBase
 {
     private readonly AppDbContext _db;
@@ -24,6 +23,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         var tables = await _db.Tables.OrderBy(t => t.TableNumber).ToListAsync();
@@ -31,6 +31,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> Get(int id)
     {
         var t = await _db.Tables.FindAsync(id);
@@ -39,6 +40,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(CreateTableDto dto)
     {
         var table = new Table
@@ -55,6 +57,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, UpdateTableDto dto)
     {
         var table = await _db.Tables.FindAsync(id);
@@ -67,6 +70,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpPost("{id}/regenerate-qr")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RegenerateQR(int id)
     {
         var table = await _db.Tables.FindAsync(id);
@@ -77,6 +81,7 @@ public class TablesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var table = await _db.Tables.FindAsync(id);

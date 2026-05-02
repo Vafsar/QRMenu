@@ -21,8 +21,8 @@ export default function AdminLogin() {
     setError('');
     try {
       const data = await loginAdmin(form);
-      setAuth(data.token, data.username);
-      navigate('/admin', { replace: true });
+      setAuth(data.token, data.username, data.role);
+      navigate(data.role === 'Waiter' ? '/waiter' : '/admin', { replace: true });
     } catch (err) {
       const msg = err.response?.data?.message || 'Giriş başarısız. Bilgilerinizi kontrol edin.';
       setError(msg);
