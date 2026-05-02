@@ -106,7 +106,7 @@ using (var scope = app.Services.CreateScope())
             db.AdminUsers.Add(new AdminUser
             {
                 Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123!admin!321"),
                 CreatedAt = DateTime.UtcNow
             });
             db.SaveChanges();

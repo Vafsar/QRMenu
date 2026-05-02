@@ -34,7 +34,9 @@ public class AuthController : ControllerBase
 
     private string GenerateJwtToken(AdminUser user)
     {
-        var secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException("JWT secret tanımlı değil!");
+        var secret = Environment.GetEnvironmentVariable("JWT_SECRET")
+            ?? _config["Jwt:Secret"]
+            ?? throw new InvalidOperationException("JWT secret tanımlı değil!");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
