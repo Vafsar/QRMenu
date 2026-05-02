@@ -63,3 +63,8 @@ export const createOrder = (data) => api.post('/orders', data).then(r => r.data)
 
 // Auth
 export const loginAdmin = (data) => api.post('/auth/login', data).then(r => r.data);
+
+// Users
+export const getUsers = () => api.get('/users').then(r => r.data);
+export const createUser = (data) => api.post('/users', data).then(r => r.data);
+export const deleteUser = (id) => api.delete(`/users/${id}`);

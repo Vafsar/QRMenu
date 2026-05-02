@@ -14,6 +14,7 @@ import AdminCategories from './pages/Admin/AdminCategories';
 import AdminMenuItems from './pages/Admin/AdminMenuItems';
 import AdminTables from './pages/Admin/AdminTables';
 import AdminOrders from './pages/Admin/AdminOrders';
+import AdminUsers from './pages/Admin/AdminUsers';
 import WaiterLayout from './pages/Waiter/WaiterLayout';
 import WaiterOrderPage from './pages/Waiter/WaiterOrderPage';
 
@@ -49,6 +50,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="items" element={<AdminMenuItems />} />
           <Route path="tables" element={<AdminTables />} />
           <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
 
         {/* Garson rotaları */}

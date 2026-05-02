@@ -103,3 +103,6 @@ public class AdminUser
 
 public record LoginDto(string Username, string Password);
 public record LoginResponseDto(string Token, string Username, string Role);
+
+public record AdminUserDto(int Id, string Username, string Role, DateTime CreatedAt);
+public record CreateAdminUserDto(string Username, string Password, string Role);

@@ -9,6 +9,7 @@ const navItems = [
   { to: '/admin/items', label: 'Ürünler', icon: '◉' },
   { to: '/admin/tables', label: 'Masalar & QR', icon: '⊡' },
   { to: '/admin/orders', label: 'Siparişler', icon: '◎' },
+  { to: '/admin/users', label: 'Kullanıcılar', icon: '⊗' },
 ];
 
 export default function AdminLayout() {
