@@ -8,7 +8,7 @@ export default function WaiterOrderPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedTable, setSelectedTable] = useState(null);
+  const [orderModal, setOrderModal] = useState(null); // seçili masa
   const [activeCategory, setActiveCategory] = useState(null);
   const [cart, setCart] = useState({});
   const [notes, setNotes] = useState('');
@@ -28,6 +28,20 @@ export default function WaiterOrderPage() {
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3000);
+  };
+
+  const openModal = (table) => {
+    setOrderModal(table);
+    setCart({});
+    setNotes('');
+    setActiveCategory(null);
+  };
+
+  const closeModal = () => {
+    setOrderModal(null);
+    setCart({});
+    setNotes('');
+    setActiveCategory(null);
   };
 
   const setQty = (itemId, delta) => {
@@ -55,20 +69,17 @@ export default function WaiterOrderPage() {
     : items;
 
   const handleSubmit = async () => {
-    if (!selectedTable) { showToast('Lütfen bir masa seçin.', 'error'); return; }
     if (cartItems.length === 0) { showToast('Sepet boş.', 'error'); return; }
-
     setSubmitting(true);
     try {
       await createOrder({
-        tableId: selectedTable.id,
+        tableId: orderModal.id,
         customerName: 'Garson',
         notes: notes || null,
         items: cartItems.map(i => ({ menuItemId: i.id, quantity: i.qty, notes: null }))
       });
-      setCart({});
-      setNotes('');
-      showToast(`Masa ${selectedTable.tableNumber} siparişi alındı!`);
+      showToast(`Masa ${orderModal.tableNumber} siparişi alındı!`);
+      closeModal();
     } catch {
       showToast('Sipariş gönderilemedi.', 'error');
     } finally {
@@ -89,109 +100,123 @@ export default function WaiterOrderPage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Sipariş Al</h1>
-          <p className="page-subtitle">Masa seçin, ürün ekleyin, siparişi gönderin</p>
+          <p className="page-subtitle">Sipariş almak için masa seçin</p>
         </div>
       </div>
 
-      {/* Masa seçimi */}
-      <div className="waiter-section">
-        <div className="waiter-section-label">Masa Seçin</div>
-        <div className="table-chips">
-          {tables.map(t => (
-            <button
-              key={t.id}
-              className={`table-chip ${selectedTable?.id === t.id ? 'selected' : ''}`}
-              onClick={() => setSelectedTable(t)}
-            >
-              Masa {t.tableNumber}
-              {t.description && <span className="chip-sub">{t.description}</span>}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Kategori filtresi */}
-      <div className="waiter-section">
-        <div className="category-tabs">
-          <button
-            className={`cat-tab ${!activeCategory ? 'active' : ''}`}
-            onClick={() => setActiveCategory(null)}
-          >
-            Tümü
+      {/* Masa kartları */}
+      <div className="waiter-tables-grid">
+        {tables.map(t => (
+          <button key={t.id} className="waiter-table-card" onClick={() => openModal(t)}>
+            <span className="wtc-icon">⊡</span>
+            <span className="wtc-number">Masa {t.tableNumber}</span>
+            {t.description && <span className="wtc-desc">{t.description}</span>}
           </button>
-          {categories.map(c => (
-            <button
-              key={c.id}
-              className={`cat-tab ${activeCategory === c.id ? 'active' : ''}`}
-              onClick={() => setActiveCategory(c.id)}
-            >
-              {c.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Ürün listesi */}
-      <div className="waiter-items">
-        {filteredItems.map(item => {
-          const qty = cart[item.id]?.qty || 0;
-          return (
-            <div key={item.id} className={`waiter-item ${qty > 0 ? 'in-cart' : ''}`}>
-              <div className="waiter-item-info">
-                <div className="waiter-item-name">{item.name}</div>
-                {item.description && (
-                  <div className="waiter-item-desc">{item.description}</div>
-                )}
-                <div className="waiter-item-price">₺{item.price.toFixed(2)}</div>
-              </div>
-              <div className="waiter-item-qty">
-                <button className="qty-btn" onClick={() => setQty(item.id, -1)} disabled={qty === 0}>−</button>
-                <span className="qty-val">{qty}</span>
-                <button className="qty-btn plus" onClick={() => setQty(item.id, 1)}>+</button>
-              </div>
-            </div>
-          );
-        })}
-        {filteredItems.length === 0 && (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--sage)' }}>
-            Bu kategoride ürün bulunmuyor.
-          </div>
+        ))}
+        {tables.length === 0 && (
+          <p style={{ color: 'var(--sage)', gridColumn: '1/-1' }}>Aktif masa bulunamadı.</p>
         )}
       </div>
 
-      {/* Notlar */}
-      {cartCount > 0 && (
-        <div className="waiter-section" style={{ marginBottom: 100 }}>
-          <div className="waiter-section-label">Sipariş Notu (İsteğe Bağlı)</div>
-          <textarea
-            className="input"
-            rows={2}
-            placeholder="Özel istek veya not..."
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-            style={{ resize: 'none' }}
-          />
-        </div>
-      )}
+      {/* Sipariş modal */}
+      {orderModal && (
+        <div className="order-modal-overlay" onClick={e => e.target === e.currentTarget && closeModal()}>
+          <div className="order-modal">
 
-      {/* Sabit alt bar */}
-      {cartCount > 0 && (
-        <div className="waiter-cart-bar">
-          <div className="cart-bar-info">
-            <span className="cart-badge">{cartCount}</span>
-            <span className="cart-bar-label">ürün</span>
-            {selectedTable && (
-              <span className="cart-bar-table">· Masa {selectedTable.tableNumber}</span>
+            {/* Modal başlık */}
+            <div className="order-modal-header">
+              <div>
+                <h2 className="order-modal-title">Masa {orderModal.tableNumber}</h2>
+                {orderModal.description && (
+                  <p className="order-modal-sub">{orderModal.description}</p>
+                )}
+              </div>
+              <button className="modal-close" onClick={closeModal}>✕</button>
+            </div>
+
+            {/* Kategori sekmeleri */}
+            <div className="order-cat-tabs">
+              <button
+                className={`cat-tab ${!activeCategory ? 'active' : ''}`}
+                onClick={() => setActiveCategory(null)}
+              >
+                Tümü
+              </button>
+              {categories.map(c => (
+                <button
+                  key={c.id}
+                  className={`cat-tab ${activeCategory === c.id ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(c.id)}
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Ürün listesi */}
+            <div className="order-items-list">
+              {filteredItems.map(item => {
+                const qty = cart[item.id]?.qty || 0;
+                return (
+                  <div key={item.id} className={`order-item ${qty > 0 ? 'in-cart' : ''}`}>
+                    <div className="order-item-info">
+                      <span className="order-item-name">{item.name}</span>
+                      {item.description && (
+                        <span className="order-item-desc">{item.description}</span>
+                      )}
+                      <span className="order-item-price">₺{item.price.toFixed(2)}</span>
+                    </div>
+                    <div className="order-item-qty">
+                      <button className="qty-btn" onClick={() => setQty(item.id, -1)} disabled={qty === 0}>−</button>
+                      <span className="qty-val">{qty}</span>
+                      <button className="qty-btn plus" onClick={() => setQty(item.id, 1)}>+</button>
+                    </div>
+                  </div>
+                );
+              })}
+              {filteredItems.length === 0 && (
+                <p style={{ padding: '24px', textAlign: 'center', color: 'var(--sage)' }}>
+                  Bu kategoride ürün yok.
+                </p>
+              )}
+            </div>
+
+            {/* Not */}
+            {cartCount > 0 && (
+              <div className="order-notes">
+                <textarea
+                  className="input"
+                  rows={2}
+                  placeholder="Sipariş notu (isteğe bağlı)..."
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  style={{ resize: 'none' }}
+                />
+              </div>
             )}
+
+            {/* Modal footer */}
+            <div className="order-modal-footer">
+              {cartCount > 0 ? (
+                <>
+                  <div className="order-footer-summary">
+                    <span className="order-footer-count">{cartCount} ürün</span>
+                    <span className="order-footer-total">₺{cartTotal.toFixed(2)}</span>
+                  </div>
+                  <button
+                    className="btn btn-primary btn-lg order-submit-btn"
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                  >
+                    {submitting ? 'Gönderiliyor...' : 'Siparişi Gönder →'}
+                  </button>
+                </>
+              ) : (
+                <p className="order-footer-empty">Sepete ürün ekleyin</p>
+              )}
+            </div>
+
           </div>
-          <div className="cart-bar-total">₺{cartTotal.toFixed(2)}</div>
-          <button
-            className="btn btn-primary cart-bar-btn"
-            onClick={handleSubmit}
-            disabled={submitting || !selectedTable}
-          >
-            {submitting ? 'Gönderiliyor...' : 'Siparişi Gönder →'}
-          </button>
         </div>
       )}
     </div>
