@@ -88,7 +88,9 @@ public class TablesController : ControllerBase
 
     private async Task<string> GenerateQRCode(int tableId)
     {
-        var baseUrl = _config["AppSettings:FrontendUrl"] ?? "http://localhost:3000";
+        var baseUrl = Environment.GetEnvironmentVariable("FRONTEND_URL")
+            ?? _config["AppSettings:FrontendUrl"]
+            ?? "http://localhost:3000";
         var menuUrl = $"{baseUrl}/menu/{tableId}";
 
         var qrGenerator = new QRCodeGenerator();
