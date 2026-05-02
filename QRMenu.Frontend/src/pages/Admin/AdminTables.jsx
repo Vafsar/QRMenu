@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getTables, createTable, updateTable, deleteTable, regenerateQR } from '../../services/api';
 import './AdminTables.css';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export default function AdminTables() {
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ export default function AdminTables() {
         <h1>Masa ${table.tableNumber}</h1>
         ${table.description ? `<p>${table.description}</p>` : ''}
         <p>QR kodu okutarak menüye ulaşın</p>
-        <img src="${window.location.origin}${table.qrCodePath}" />
+        <img src="${API_BASE}${table.qrCodePath}" />
         <div class="url">${window.location.origin}/menu/${table.id}</div>
       </body></html>
     `);
@@ -109,12 +111,12 @@ export default function AdminTables() {
               </span>
             </div>
 
-            <div className="qr-wrap" onClick={() => setQrModal(t)}>
+            <div className="qr-wrap" onClick={() => t.qrCodePath && setQrModal(t)}>
               {t.qrCodePath
-                ? <img src={t.qrCodePath} alt={`Masa ${t.tableNumber} QR`} className="qr-img" />
-                : <div className="qr-placeholder">QR Üretiliyor...</div>
+                ? <img src={`${API_BASE}${t.qrCodePath}`} alt={`Masa ${t.tableNumber} QR`} className="qr-img" />
+                : <div className="qr-placeholder">QR Yok — "QR Yenile" tıklayın</div>
               }
-              <div className="qr-overlay">Büyüt</div>
+              {t.qrCodePath && <div className="qr-overlay">Büyüt</div>}
             </div>
 
             <div className="table-link">
@@ -146,7 +148,7 @@ export default function AdminTables() {
               <h2 className="modal-title">Masa {qrModal.tableNumber}</h2>
               <button className="modal-close" onClick={() => setQrModal(null)}>✕</button>
             </div>
-            <img src={qrModal.qrCodePath} alt="QR" style={{ width: '100%', borderRadius: 12 }} />
+            <img src={`${API_BASE}${qrModal.qrCodePath}`} alt="QR" style={{ width: '100%', borderRadius: 12 }} />
             <p style={{ fontSize: 13, color: 'var(--sage)', marginTop: 12 }}>
               {window.location.origin}/menu/{qrModal.id}
             </p>
